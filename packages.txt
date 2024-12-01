@@ -1,2 +1,1 @@
-VQQRK9OQ49,2023A7PS0109U,Books,Arrived and waiting to be picked up,2024-11-30 16:02:12
-TQWWNF1XJG,2023A7PS0109U,Clothes,Arrived and waiting to be picked up,2024-11-30 16:14:15
+UID20241201020755,2023A7PS0109U,books,Arrived and waiting to be picked up,2024-12-01 02:07:55

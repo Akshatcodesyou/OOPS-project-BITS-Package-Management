@@ -230,38 +230,34 @@ public class NewUserRegistration {
                 String name = nameField.getText();
                 String collegeId = collegeIdField.getText();
                 String password = new String(passwordField.getPassword());
-
+        
                 if (name.isEmpty() || collegeId.isEmpty() || password.isEmpty()) {
                     JOptionPane.showMessageDialog(frame, "All fields must be filled.");
                 } else {
                     // Automatically set the username to the college ID
                     String username = collegeId.toUpperCase();
-
+        
                     try (BufferedWriter writer = new BufferedWriter(new FileWriter("users.txt", true))) {
                         // Save the user information (Full Name, College ID, Password)
                         writer.write(name + "," + collegeId + "," + password + "\n");
                         JOptionPane.showMessageDialog(frame, "Registration successful!");
                         frame.setVisible(false);
-
-                        // Extract the first two parts of the name to pass to UserDashboard
-                        String[] nameParts = name.split(" ");
-                        String firstTwoNames = nameParts.length > 1 ? nameParts[0] + " " + nameParts[1] : nameParts[0];
-
-                        // Pass the modified name and collegeId to the UserDashboard
-                        new UserDashboard(firstTwoNames, collegeId);  // Fix: Pass both name and collegeId
+        
+                        // Pass both fullName and collegeId to the UserDashboard
+                        new UserDashboard(name, collegeId);  // Pass both name and collegeId dynamically
                     } catch (IOException ex) {
                         JOptionPane.showMessageDialog(frame, "Error saving user information.");
                     }
                 }
             }
-        });
+        });        
 
         // Go Back Button Action
         goBackButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 frame.setVisible(false);
-                new Main();  // Navigate back to the main login page
+                new UserLogin(); // Redirect to the login page
             }
         });
 
@@ -270,28 +266,14 @@ public class NewUserRegistration {
     }
 
     private void setDarkMode() {
-        UIManager.put("Panel.background", new Color(40, 40, 40));
-        UIManager.put("Button.background", new Color(60, 60, 60));
-        UIManager.put("Button.foreground", Color.BLACK);
+        UIManager.put("Button.background", new Color(80, 80, 80));
+        UIManager.put("Button.foreground", Color.WHITE);
+        UIManager.put("Panel.background", new Color(50, 50, 50));
         UIManager.put("Label.foreground", Color.WHITE);
-        UIManager.put("TextField.background", new Color(60, 60, 60));
-        UIManager.put("TextField.foreground", Color.WHITE);
-        UIManager.put("PasswordField.background", new Color(60, 60, 60));
-        UIManager.put("PasswordField.foreground", Color.WHITE);
-        UIManager.put("OptionPane.background", new Color(40, 40, 40));
-        UIManager.put("OptionPane.messageForeground", Color.WHITE);
-        UIManager.put("OptionPane.buttonBackground", new Color(60, 60, 60));
-        UIManager.put("OptionPane.buttonForeground", Color.WHITE);
-        UIManager.put("OptionPane.titleForeground", Color.WHITE);
-
-        try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     public static void main(String[] args) {
         new NewUserRegistration();
     }
 }
+

@@ -137,44 +137,38 @@ public class UserLogin {
 
     public UserLogin() {
         setDarkMode();
-        
-        // Create the JFrame for the login page
+
         frame = new JFrame("User Login");
         frame.setSize(400, 300);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout());
 
-        // Create the form panel for username and password input
         JPanel formPanel = new JPanel();
         formPanel.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
 
-        // College ID label and text field (this will be the username field)
         JLabel usernameLabel = new JLabel("College ID:");
         usernameField = new JTextField(20);
         usernameField.setBackground(new Color(60, 60, 60));
         usernameField.setForeground(Color.WHITE);
 
-        // Password label and password field
         JLabel passwordLabel = new JLabel("Password:");
         passwordField = new JPasswordField(20);
         passwordField.setBackground(new Color(60, 60, 60));
         passwordField.setForeground(Color.WHITE);
 
-        // Login button
         JButton loginButton = new JButton("Login");
         loginButton.setBackground(new Color(60, 60, 60));
         loginButton.setForeground(Color.BLACK);
         loginButton.setFocusPainted(false);
 
-        // Go back button
         JButton goBackButton = new JButton("Go Back");
         goBackButton.setBackground(new Color(60, 60, 60));
         goBackButton.setForeground(Color.BLACK);
         goBackButton.setFocusPainted(false);
 
-        // Adding components to the form panel
+        // Adding components to form panel
         gbc.gridx = 0; gbc.gridy = 0;
         formPanel.add(usernameLabel, gbc);
         gbc.gridx = 1; gbc.gridy = 0;
@@ -193,16 +187,15 @@ public class UserLogin {
         gbc.gridwidth = 2;
         formPanel.add(goBackButton, gbc);
 
-        // Add the form panel to the JFrame
         frame.add(formPanel, BorderLayout.CENTER);
 
-        // Login button action
+        // Login Button Action
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String collegeId = usernameField.getText().toUpperCase();
                 String password = new String(passwordField.getPassword());
-
+        
                 if (collegeId.isEmpty() || password.isEmpty()) {
                     JOptionPane.showMessageDialog(frame, "Please enter both college ID and password.");
                 } else {
@@ -210,87 +203,57 @@ public class UserLogin {
                     if (userData != null) {
                         String fullName = userData[0]; // Full name from authentication
                         String storedCollegeId = userData[1]; // College ID from authentication
-                        
+        
                         frame.setVisible(false);  // Close login screen
-                        new UserDashboard(fullName, storedCollegeId);  // Pass both full name and college ID to the dashboard
+                        // Pass both fullName and storedCollegeId to the UserDashboard
+                        new UserDashboard(fullName, storedCollegeId);  // Pass both fullName and collegeId dynamically
                     } else {
                         JOptionPane.showMessageDialog(frame, "Invalid college ID or password.");
                     }
                 }
             }
-        });
+        });        
 
-        // Go back button action
+        // Go Back Button Action
         goBackButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 frame.setVisible(false);
-                new Main();  // Assuming Main is where the program starts
+                new NewUserRegistration(); // Redirect to registration page
             }
         });
 
-        // Center the JFrame and make it visible
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
 
-    // Method to authenticate the user with stored data (college ID and password)
     private String[] authenticateUser(String collegeId, String password) {
         try (BufferedReader reader = new BufferedReader(new FileReader("users.txt"))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                // Split each line based on commas
-                String[] user = line.trim().split(",");
-                
-                if (user.length < 3) {
-                    // Skip malformed lines
-                    continue;
-                }
-                
-                String storedFullName = user[0].trim();
-                String storedCollegeId = user[1].trim();  // College ID stored as username
-                String storedPassword = user[2].trim();  // Password stored
+                String[] userDetails = line.split(",");
+                String storedName = userDetails[0];
+                String storedCollegeId = userDetails[1];
+                String storedPassword = userDetails[2];
 
-                // Debugging: Print out the parsed user data
-                System.out.println("Stored College ID: " + storedCollegeId + ", College ID entered: " + collegeId);
-                System.out.println("Stored Password: " + storedPassword + ", Password entered: " + password);
-
-                // College ID comparison and password check
                 if (storedCollegeId.equals(collegeId) && storedPassword.equals(password)) {
-                    return new String[]{storedFullName, storedCollegeId};  // Return both full name and college ID
+                    return new String[]{storedName, storedCollegeId};
                 }
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return null;  // Invalid login if no match is found
+        return null; // User not found
     }
 
-    // Method to apply dark mode
     private void setDarkMode() {
-        UIManager.put("Panel.background", new Color(40, 40, 40));
-        UIManager.put("Button.background", new Color(60, 60, 60));
-        UIManager.put("Button.foreground", Color.BLACK);
+        UIManager.put("Button.background", new Color(80, 80, 80));
+        UIManager.put("Button.foreground", Color.WHITE);
+        UIManager.put("Panel.background", new Color(50, 50, 50));
         UIManager.put("Label.foreground", Color.WHITE);
-        UIManager.put("TextField.background", new Color(60, 60, 60));
-        UIManager.put("TextField.foreground", Color.WHITE);
-        UIManager.put("PasswordField.background", new Color(60, 60, 60));
-        UIManager.put("PasswordField.foreground", Color.WHITE);
-        UIManager.put("OptionPane.background", new Color(40, 40, 40));
-        UIManager.put("OptionPane.messageForeground", Color.WHITE);
-        UIManager.put("OptionPane.buttonBackground", new Color(60, 60, 60));
-        UIManager.put("OptionPane.buttonForeground", Color.WHITE);
-        UIManager.put("OptionPane.titleForeground", Color.WHITE);
-
-        try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
-    // Main method to start the login page
     public static void main(String[] args) {
-        new UserLogin();  // Start the login page
+        new UserLogin();
     }
 }
