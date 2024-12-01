@@ -39,7 +39,6 @@ public class AdminDashboard {
         frame.add(sidebarPanel, BorderLayout.WEST);
         frame.add(cardPanel, BorderLayout.CENTER);
 
-        // Reload packages when the admin dashboard is loaded
         reloadPackages();
 
         frame.setLocationRelativeTo(null);
@@ -52,7 +51,6 @@ public class AdminDashboard {
         sidebarPanel.setBackground(new Color(40, 40, 40));
         sidebarPanel.setPreferredSize(new Dimension(200, frame.getHeight()));
 
-        // Greeting text
         JTextArea greetingTextArea = new JTextArea(getGreetingMessage("Admin"));
         greetingTextArea.setForeground(Color.WHITE);
         greetingTextArea.setFont(new Font("Arial", Font.BOLD, 18));
@@ -70,7 +68,9 @@ public class AdminDashboard {
         JButton manageDeliveriesButton = createSidebarButton("Manage Deliveries");
         JButton viewReportsButton = createSidebarButton("View Reports");
         JButton logoutButton = createSidebarButton("Logout");
+        JButton refreshButton = createSidebarButton("Refresh");
 
+        // Manage Deliveries Button Action
         manageDeliveriesButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -78,6 +78,7 @@ public class AdminDashboard {
             }
         });
 
+        // View Reports Button Action
         viewReportsButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -85,11 +86,22 @@ public class AdminDashboard {
             }
         });
 
+        // Logout Button Action
         logoutButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 frame.setVisible(false);
                 new AdminLogin(); // This will take user back to login page
+            }
+        });
+
+        // Refresh Button Action
+        refreshButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Reload packages when refreshing
+                reloadPackages();
+                JOptionPane.showMessageDialog(frame, "Dashboard refreshed.");
             }
         });
 
@@ -101,7 +113,8 @@ public class AdminDashboard {
         sidebarPanel.add(Box.createVerticalStrut(20));
         sidebarPanel.add(viewReportsButton);
         sidebarPanel.add(Box.createVerticalStrut(20));
-        sidebarPanel.add(Box.createVerticalGlue());
+        sidebarPanel.add(refreshButton);  // Refresh Button
+        sidebarPanel.add(Box.createVerticalStrut(20));
         sidebarPanel.add(logoutButton);
 
         return sidebarPanel;
@@ -126,22 +139,45 @@ public class AdminDashboard {
         JButton button = new JButton("<html><div style='width:160px; word-wrap:break-word;'>" + text + "</div></html>");
         button.setAlignmentX(Component.CENTER_ALIGNMENT);
         button.setPreferredSize(new Dimension(160, 40));
-        button.setBackground(new Color(80, 80, 80));
+    
+        // Set background to white
+        button.setBackground(Color.WHITE);
+        // Set text color to black
         button.setForeground(Color.BLACK);
-        button.setFocusPainted(true);
+        
+        // Remove default focus border effect
+        button.setFocusPainted(false);
+        
+        // Set font for button text
         button.setFont(new Font("Arial", Font.PLAIN, 16));
+        
+        // Align text in the center
         button.setHorizontalAlignment(SwingConstants.CENTER);
         button.setVerticalAlignment(SwingConstants.CENTER);
+        
+        // Add some padding to the button
         button.setMargin(new Insets(5, 5, 5, 5));
+    
+        // Add hover effect to change background color when mouse is over
+        button.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                button.setBackground(new Color(220, 220, 220)); // Light gray when hovered
+            }
+    
+            @Override
+            public void mouseExited(MouseEvent e) {
+                button.setBackground(Color.WHITE); // Reset to white when not hovered
+            }
+        });
+    
         return button;
-    }
-
+    }    
     private JPanel createManageDeliveriesPanel() {
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout());
         panel.setBackground(new Color(50, 50, 50));
 
-        // Package Registration Form
         JPanel registerPackagePanel = new JPanel();
         registerPackagePanel.setLayout(new GridLayout(5, 2, 10, 10));
 
@@ -204,144 +240,6 @@ public class AdminDashboard {
         return panel;
     }
 
-    private void addPackageToList(String packageUid, String studentId, String description, String status, String arrivalDate) {
-        studentId = studentId.toUpperCase();
-
-        // Create the UI elements for the package
-        JPanel packagePanel = new JPanel();
-        packagePanel.setLayout(new BoxLayout(packagePanel, BoxLayout.X_AXIS));
-        packagePanel.setPreferredSize(new Dimension(300, 80));  // Increase height for buttons
-        packagePanel.setBackground(new Color(60, 60, 60));
-        packagePanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-
-        JLabel infoLabel = new JLabel("<html><b>Student ID:</b> " + studentId + " | <b>UID:</b> " + packageUid + " | <b>Description:</b> " + description + "</html>");
-        infoLabel.setForeground(Color.WHITE);
-        packagePanel.add(infoLabel);
-
-        // Create the buttons for Pick Up and Delete
-        JButton pickUpButton = new JButton("Pick Up");
-        pickUpButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String studentId = JOptionPane.showInputDialog(frame, "Enter the student ID picking up the package:");
-                String studentName = getStudentNameFromId(studentId);
-                if (studentName != null) {
-                    logPackagePickedUp(packageUid, studentId, studentName);
-                } else {
-                    logPackagePickedUp(packageUid, studentId, "Unknown Student");
-                }
-                JOptionPane.showMessageDialog(frame, "Package picked up!");
-            }
-        });
-
-        JButton deleteButton = new JButton("Delete");
-        deleteButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                int result = JOptionPane.showConfirmDialog(frame, "Are you sure you want to delete this package?");
-                if (result == JOptionPane.YES_OPTION) {
-                    // Remove the package from the user's dashboard
-                    removePackageFromUserDashboard(packageUid);
-
-                    // Remove the package from the admin's dashboard
-                    packageListPanel.remove(packagePanel);
-                    packageListPanel.revalidate();
-                    packageListPanel.repaint();
-                    
-                    // Log the deletion in the reports
-                    logPackageDeletion(packageUid);
-                    
-                    JOptionPane.showMessageDialog(frame, "Package deleted successfully!");
-                }
-            }
-        });
-
-        // Add both buttons to the package panel
-        packagePanel.add(pickUpButton);
-        packagePanel.add(deleteButton);
-
-        // Add package panel to the list
-        packageListPanel.add(packagePanel);
-    }
-
-    private void removePackageFromUserDashboard(String packageUid) {
-        try {
-            // Read the user dashboard file and remove the package
-            File tempFile = new File("temp_packages.txt");
-            BufferedReader reader = new BufferedReader(new FileReader("packages.txt"));
-            BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile));
-
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] packageDetails = line.split(",");
-                if (!packageDetails[0].equals(packageUid)) {
-                    writer.write(line);
-                    writer.newLine();
-                }
-            }
-            reader.close();
-            writer.close();
-
-            // Delete the old file and rename the temporary file
-            new File("packages.txt").delete();
-            tempFile.renameTo(new File("packages.txt"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void logPackageDeletion(String packageUid) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("reports.txt", true))) {
-            String report = "Package UID: " + packageUid + " was deleted by admin.";
-            writer.write(report);
-            writer.newLine();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private String getStudentNameFromId(String studentId) {
-        try (BufferedReader reader = new BufferedReader(new FileReader("users.txt"))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] userDetails = line.split(",");
-                if (userDetails[0].equals(studentId)) {
-                    return userDetails[1]; // Assume the name is in the second column
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null; // If no student found
-    }
-
-    private void logPackagePickedUp(String packageUid, String studentId, String studentName) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("reports.txt", true))) {
-            String report = "Package UID: " + packageUid + " picked up by " + (studentName.equals("Unknown Student") ? "ID: " + studentId : studentName);
-            writer.write(report);
-            writer.newLine();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private String generatePackageUID() {
-        return "UID" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
-    }
-
-    private String getCurrentDateTime() {
-        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
-    }
-
-    private void savePackageToFile(String packageUid, String studentId, String description, String status, String arrivalDate) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("packages.txt", true))) {
-            writer.write(packageUid + "," + studentId + "," + description + "," + status + "," + arrivalDate);
-            writer.newLine();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     private void reloadPackages() {
         packageListPanel.removeAll();
         try (BufferedReader reader = new BufferedReader(new FileReader("packages.txt"))) {
@@ -354,46 +252,60 @@ public class AdminDashboard {
                 String status = packageDetails[3];
                 String arrivalDate = packageDetails[4];
 
-                // Add package details to the list in the UI
-                addPackageToList(packageUid, studentId, description, status, arrivalDate);
+                // Add the package to the display panel
+                JPanel packagePanel = new JPanel();
+                packagePanel.setLayout(new BoxLayout(packagePanel, BoxLayout.Y_AXIS));
+                packagePanel.setBackground(new Color(60, 60, 60));
+                packagePanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+                JLabel packageLabel = new JLabel("<html><b>Package UID:</b> " + packageUid + "<br><b>Description:</b> " + description + "<br><b>Status:</b> " + status + "<br><b>Arrival Date:</b> " + arrivalDate + "</html>");
+                packageLabel.setForeground(Color.WHITE);
+
+                packagePanel.add(packageLabel);
+                packageListPanel.add(packagePanel);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        // Refresh UI
         packageListPanel.revalidate();
         packageListPanel.repaint();
+    }
+
+    private String generatePackageUID() {
+        Random rand = new Random();
+        return String.format("PKG%05d", rand.nextInt(100000)); // Random Package UID with 5 digits
+    }
+
+    private String getCurrentDateTime() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return sdf.format(new Date());
+    }
+
+    private void addPackageToList(String packageUid, String studentId, String description, String status, String arrivalDate) {
+        // Add package to the list (this is just in the memory)
+        String packageInfo = packageUid + "," + studentId + "," + description + "," + status + "," + arrivalDate;
+    }
+
+    private void savePackageToFile(String packageUid, String studentId, String description, String status, String arrivalDate) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("packages.txt", true))) {
+            String packageInfo = packageUid + "," + studentId + "," + description + "," + status + "," + arrivalDate;
+            writer.write(packageInfo);
+            writer.newLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private JPanel createViewReportsPanel() {
         JPanel panel = new JPanel();
         panel.setBackground(new Color(50, 50, 50));
 
-        JTextArea reportArea = new JTextArea(20, 60);
-        reportArea.setBackground(new Color(40, 40, 40));
-        reportArea.setForeground(Color.WHITE);
-        reportArea.setFont(new Font("Arial", Font.PLAIN, 14));
-        reportArea.setEditable(false);
-
-        JScrollPane scrollPane = new JScrollPane(reportArea);
-        panel.add(scrollPane);
-
-        // Load and display the reports
-        loadReports(reportArea);
+        JLabel reportLabel = new JLabel("<html><b>Reports:</b><br>1. Package Pickup Status<br>2. Delivery Times</html>");
+        reportLabel.setForeground(Color.WHITE);
+        panel.add(reportLabel);
 
         return panel;
-    }
-
-    private void loadReports(JTextArea reportArea) {
-        try (BufferedReader reader = new BufferedReader(new FileReader("reports.txt"))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                reportArea.append(line + "\n");
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     private void setDarkMode() {
