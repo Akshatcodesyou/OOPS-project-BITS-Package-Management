@@ -74,14 +74,14 @@ public class AdminDashboard extends JFrame {
                 null, options, options[0]);
 
         switch (choice) {
-            case 0: // Pick up Package
+            case 0:
                 String pickerId = JOptionPane.showInputDialog(this, "Enter picker ID:");
                 if (pickerId != null && !pickerId.isEmpty()) {
                     packageManager.pickUpPackage(selectedPackageUid, pickerId);
                     JOptionPane.showMessageDialog(this, "Package picked up successfully.");
                 }
                 break;
-            case 1: // Delete Package
+            case 1:
                 packageManager.deletePackage(selectedPackageUid);
                 JOptionPane.showMessageDialog(this, "Package deleted successfully.");
                 break;
