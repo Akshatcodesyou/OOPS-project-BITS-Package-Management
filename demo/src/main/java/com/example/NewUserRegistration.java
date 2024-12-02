@@ -1,279 +1,69 @@
-// package com.example;
-
-// import javax.swing.*;
-// import java.awt.*;
-// import java.awt.event.*;
-// import java.io.*;
-
-// public class NewUserRegistration {
-//     private JFrame frame;
-//     private JTextField nameField, collegeIdField;
-//     private JPasswordField passwordField;
-
-//     public NewUserRegistration() {
-//         setDarkMode();
-
-//         frame = new JFrame("New User Registration");
-//         frame.setSize(400, 300);
-//         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//         frame.setLayout(new BorderLayout());
-
-//         JPanel formPanel = new JPanel();
-//         formPanel.setLayout(new GridBagLayout());
-//         GridBagConstraints gbc = new GridBagConstraints();
-//         gbc.insets = new Insets(10, 10, 10, 10);
-
-//         JLabel nameLabel = new JLabel("Full Name:");
-//         nameField = new JTextField(20);
-//         nameField.setBackground(new Color(60, 60, 60));
-//         nameField.setForeground(Color.WHITE);
-
-//         JLabel collegeIdLabel = new JLabel("College ID:");
-//         collegeIdField = new JTextField(20);
-//         collegeIdField.setBackground(new Color(60, 60, 60));
-//         collegeIdField.setForeground(Color.WHITE);
-
-//         JLabel passwordLabel = new JLabel("Password:");
-//         passwordField = new JPasswordField(20);
-//         passwordField.setBackground(new Color(60, 60, 60));
-//         passwordField.setForeground(Color.WHITE);
-
-//         JButton registerButton = new JButton("Register");
-//         registerButton.setBackground(new Color(60, 60, 60));
-//         registerButton.setForeground(Color.BLACK);
-//         registerButton.setFocusPainted(false);
-
-//         JButton goBackButton = new JButton("Go Back");
-//         goBackButton.setBackground(new Color(60, 60, 60));
-//         goBackButton.setForeground(Color.BLACK);
-//         goBackButton.setFocusPainted(false);
-
-//         // Adding components to form panel
-//         gbc.gridx = 0; gbc.gridy = 0;
-//         formPanel.add(nameLabel, gbc);
-//         gbc.gridx = 1; gbc.gridy = 0;
-//         formPanel.add(nameField, gbc);
-
-//         gbc.gridx = 0; gbc.gridy = 1;
-//         formPanel.add(collegeIdLabel, gbc);
-//         gbc.gridx = 1; gbc.gridy = 1;
-//         formPanel.add(collegeIdField, gbc);
-
-//         gbc.gridx = 0; gbc.gridy = 2;
-//         formPanel.add(passwordLabel, gbc);
-//         gbc.gridx = 1; gbc.gridy = 2;
-//         formPanel.add(passwordField, gbc);
-
-//         gbc.gridx = 0; gbc.gridy = 3;
-//         gbc.gridwidth = 2;
-//         formPanel.add(registerButton, gbc);
-
-//         gbc.gridx = 0; gbc.gridy = 4;
-//         gbc.gridwidth = 2;
-//         formPanel.add(goBackButton, gbc);
-
-//         frame.add(formPanel, BorderLayout.CENTER);
-
-//         // Register Button Action
-//         registerButton.addActionListener(new ActionListener() {
-//             @Override
-//             public void actionPerformed(ActionEvent e) {
-//                 String name = nameField.getText();
-//                 String collegeId = collegeIdField.getText();
-//                 String password = new String(passwordField.getPassword());
-
-//                 if (name.isEmpty() || collegeId.isEmpty() || password.isEmpty()) {
-//                     JOptionPane.showMessageDialog(frame, "All fields must be filled.");
-//                 } else {
-//                     // Automatically set the username to the college ID
-//                     String username = collegeId;
-
-//                     try (BufferedWriter writer = new BufferedWriter(new FileWriter("users.txt", true))) {
-//                         // Save the user information (College ID, Full Name, Username (same as College ID), Password)
-//                         writer.write(collegeId + "," + name + "," + username + "," + password + "\n");
-//                         JOptionPane.showMessageDialog(frame, "Registration successful!");
-//                         frame.setVisible(false);
-
-//                         // Extract the first two parts of the name to pass to UserDashboard
-//                         String[] nameParts = name.split(" ");
-//                         String firstTwoNames = nameParts.length > 1 ? nameParts[0] + " " + nameParts[1] : nameParts[0];
-
-//                         // Pass the modified name to the UserDashboard
-//                         new UserDashboard(firstTwoNames);
-//                     } catch (IOException ex) {
-//                         JOptionPane.showMessageDialog(frame, "Error saving user information.");
-//                     }
-//                 }
-//             }
-//         });
-
-//         // Go Back Button Action
-//         goBackButton.addActionListener(new ActionListener() {
-//             @Override
-//             public void actionPerformed(ActionEvent e) {
-//                 frame.setVisible(false);
-//                 new Main();  // Navigate back to the main login page
-//             }
-//         });
-
-//         frame.setLocationRelativeTo(null);
-//         frame.setVisible(true);
-//     }
-
-//     private void setDarkMode() {
-//         UIManager.put("Panel.background", new Color(40, 40, 40));
-//         UIManager.put("Button.background", new Color(60, 60, 60));
-//         UIManager.put("Button.foreground", Color.BLACK);
-//         UIManager.put("Label.foreground", Color.WHITE);
-//         UIManager.put("TextField.background", new Color(60, 60, 60));
-//         UIManager.put("TextField.foreground", Color.WHITE);
-//         UIManager.put("PasswordField.background", new Color(60, 60, 60));
-//         UIManager.put("PasswordField.foreground", Color.WHITE);
-//         UIManager.put("OptionPane.background", new Color(40, 40, 40));
-//         UIManager.put("OptionPane.messageForeground", Color.WHITE);
-//         UIManager.put("OptionPane.buttonBackground", new Color(60, 60, 60));
-//         UIManager.put("OptionPane.buttonForeground", Color.WHITE);
-//         UIManager.put("OptionPane.titleForeground", Color.WHITE);
-
-//         try {
-//             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-//         } catch (Exception e) {
-//             e.printStackTrace();
-//         }
-//     }
-
-//     public static void main(String[] args) {
-//         new NewUserRegistration();
-//     }
-// }
-
 package com.example;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
 import java.io.*;
 
-public class NewUserRegistration {
-    private JFrame frame;
+public class NewUserRegistration extends JFrame {
     private JTextField nameField, collegeIdField;
-    private JPasswordField passwordField;
+    private JPasswordField passwordField, confirmPasswordField;
 
     public NewUserRegistration() {
-        setDarkMode();
+        setTitle("New User Registration");
+        setSize(300, 250);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setLocationRelativeTo(null);
 
-        frame = new JFrame("New User Registration");
-        frame.setSize(400, 300);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setLayout(new BorderLayout());
+        JPanel panel = new JPanel(new GridLayout(5, 2, 10, 10));
+        panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        panel.setBackground(new Color(44, 62, 80));
 
-        JPanel formPanel = new JPanel();
-        formPanel.setLayout(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(10, 10, 10, 10);
+        panel.add(new JLabel("Name:"));
+        nameField = new JTextField();
+        panel.add(nameField);
 
-        JLabel nameLabel = new JLabel("Full Name:");
-        nameField = new JTextField(20);
-        nameField.setBackground(new Color(60, 60, 60));
-        nameField.setForeground(Color.WHITE);
+        panel.add(new JLabel("College ID:"));
+        collegeIdField = new JTextField();
+        panel.add(collegeIdField);
 
-        JLabel collegeIdLabel = new JLabel("College ID:");
-        collegeIdField = new JTextField(20);
-        collegeIdField.setBackground(new Color(60, 60, 60));
-        collegeIdField.setForeground(Color.WHITE);
+        panel.add(new JLabel("Password:"));
+        passwordField = new JPasswordField();
+        panel.add(passwordField);
 
-        JLabel passwordLabel = new JLabel("Password:");
-        passwordField = new JPasswordField(20);
-        passwordField.setBackground(new Color(60, 60, 60));
-        passwordField.setForeground(Color.WHITE);
+        panel.add(new JLabel("Confirm Password:"));
+        confirmPasswordField = new JPasswordField();
+        panel.add(confirmPasswordField);
 
         JButton registerButton = new JButton("Register");
-        registerButton.setBackground(new Color(60, 60, 60));
-        registerButton.setForeground(Color.BLACK);
-        registerButton.setFocusPainted(false);
+        registerButton.setBackground(new Color(52, 152, 219));
+        registerButton.setForeground(Color.WHITE);
+        registerButton.addActionListener(e -> register());
+        panel.add(registerButton);
 
-        JButton goBackButton = new JButton("Go Back");
-        goBackButton.setBackground(new Color(60, 60, 60));
-        goBackButton.setForeground(Color.BLACK);
-        goBackButton.setFocusPainted(false);
-
-        // Adding components to form panel
-        gbc.gridx = 0; gbc.gridy = 0;
-        formPanel.add(nameLabel, gbc);
-        gbc.gridx = 1; gbc.gridy = 0;
-        formPanel.add(nameField, gbc);
-
-        gbc.gridx = 0; gbc.gridy = 1;
-        formPanel.add(collegeIdLabel, gbc);
-        gbc.gridx = 1; gbc.gridy = 1;
-        formPanel.add(collegeIdField, gbc);
-
-        gbc.gridx = 0; gbc.gridy = 2;
-        formPanel.add(passwordLabel, gbc);
-        gbc.gridx = 1; gbc.gridy = 2;
-        formPanel.add(passwordField, gbc);
-
-        gbc.gridx = 0; gbc.gridy = 3;
-        gbc.gridwidth = 2;
-        formPanel.add(registerButton, gbc);
-
-        gbc.gridx = 0; gbc.gridy = 4;
-        gbc.gridwidth = 2;
-        formPanel.add(goBackButton, gbc);
-
-        frame.add(formPanel, BorderLayout.CENTER);
-
-        // Register Button Action
-        registerButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String name = nameField.getText();
-                String collegeId = collegeIdField.getText();
-                String password = new String(passwordField.getPassword());
-        
-                if (name.isEmpty() || collegeId.isEmpty() || password.isEmpty()) {
-                    JOptionPane.showMessageDialog(frame, "All fields must be filled.");
-                } else {
-                    // Automatically set the username to the college ID
-                    String username = collegeId.toUpperCase();
-        
-                    try (BufferedWriter writer = new BufferedWriter(new FileWriter("users.txt", true))) {
-                        // Save the user information (Full Name, College ID, Password)
-                        writer.write(name + "," + collegeId + "," + password + "\n");
-                        JOptionPane.showMessageDialog(frame, "Registration successful!");
-                        frame.setVisible(false);
-        
-                        // Pass both fullName and collegeId to the UserDashboard
-                        new UserDashboard(name, collegeId);  // Pass both name and collegeId dynamically
-                    } catch (IOException ex) {
-                        JOptionPane.showMessageDialog(frame, "Error saving user information.");
-                    }
-                }
-            }
-        });        
-
-        // Go Back Button Action
-        goBackButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                frame.setVisible(false);
-                new UserLogin(); // Redirect to the login page
-            }
-        });
-
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
+        add(panel);
+        setVisible(true);
     }
 
-    private void setDarkMode() {
-        UIManager.put("Button.background", new Color(80, 80, 80));
-        UIManager.put("Button.foreground", Color.WHITE);
-        UIManager.put("Panel.background", new Color(50, 50, 50));
-        UIManager.put("Label.foreground", Color.WHITE);
-    }
+    private void register() {
+        String name = nameField.getText();
+        String collegeId = collegeIdField.getText().toUpperCase();
+        String password = new String(passwordField.getPassword());
+        String confirmPassword = new String(confirmPasswordField.getPassword());
 
-    public static void main(String[] args) {
-        new NewUserRegistration();
+        if (name.isEmpty() || collegeId.isEmpty() || password.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please fill in all fields.", "Error", JOptionPane.ERROR_MESSAGE);
+        } else if (!password.equals(confirmPassword)) {
+            JOptionPane.showMessageDialog(this, "Passwords do not match.", "Error", JOptionPane.ERROR_MESSAGE);
+        } else {
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter("users.txt", true))) {
+                writer.write(name + "," + collegeId + "," + password);
+                writer.newLine();
+                JOptionPane.showMessageDialog(this, "Registration successful!");
+                dispose();
+            } catch (IOException e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Error registering user.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
     }
 }
-

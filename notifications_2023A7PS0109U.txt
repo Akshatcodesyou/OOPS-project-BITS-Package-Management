@@ -1,0 +1,5 @@
+You have a pending package with UID PKG07005. Description: pen Arrival Date: 2024-12-02 14:12:03
+You have a pending package with UID PKG11425. Description: pens and notebooks Arrival Date: 2024-12-02 14:36:34
+You have a pending package with UID PKG07005. Description: pen Arrival Date: 2024-12-02 14:12:03
+You have a pending package with UID PKG11425. Description: pens and notebooks Arrival Date: 2024-12-02 14:36:34
+You have a pending package with UID PKG1733152838712. Description: books and clothes Arrival Date: 2024-12-02 19:20:38
