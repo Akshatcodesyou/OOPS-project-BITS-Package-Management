@@ -53,8 +53,3 @@ This is a Package Management System that provides functionalities for both Admin
 - BufferedReader, BufferedWriter: For file operations (user and package data)
 - SimpleDateFormat: For managing timestamps of activities
 
-## Installation Instructions
-
-1. Clone this repository to your local machine:
-   ```bash
-   git clone https://github.com/deba1/Shop-Management-System.git
