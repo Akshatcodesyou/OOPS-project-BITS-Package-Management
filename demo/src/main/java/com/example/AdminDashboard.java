@@ -77,7 +77,7 @@ public class AdminDashboard extends JFrame {
             case 0:
                 String pickerId = JOptionPane.showInputDialog(this, "Enter picker ID:");
                 if (pickerId != null && !pickerId.isEmpty()) {
-                    packageManager.pickUpPackage(selectedPackageUid, pickerId);
+                    packageManager.pickUpPackage(selectedPackageUid, pickerId, "admin");
                     JOptionPane.showMessageDialog(this, "Package picked up successfully.");
                 }
                 break;
