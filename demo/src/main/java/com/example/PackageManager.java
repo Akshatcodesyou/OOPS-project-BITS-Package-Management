@@ -7,6 +7,7 @@ import java.util.*;
 public class PackageManager {
     private static final String PACKAGE_FILE = "packages.txt";
     private static final String REPORT_FILE = "admin_reports.txt";
+    private static final String GLOBAL_REPORT = "reports.txt";
 
     public String generatePackageUid() {
         return "PKG" + System.currentTimeMillis();
@@ -33,11 +34,16 @@ public class PackageManager {
         return packages;
     }
 
-    public void pickUpPackage(String packageUid, String pickerId) {
+    public void pickUpPackage(String packageUid, String pickerId, String collegeId) {
         String timestamp = getCurrentDateTime();
         String report = "Package " + packageUid + " was picked up by " + pickerId + " at " + timestamp;
+        String userReport = "User ID: " + collegeId + " - Your package " + packageUid + " was picked up by " + pickerId + " at " + timestamp;
+
         saveReportToFile(REPORT_FILE, report);
+        saveReportToFile(GLOBAL_REPORT, userReport, collegeId);
+
         updatePackageStatus(packageUid, "Picked Up");
+        deletePackage(packageUid);
     }
 
     public void deletePackage(String packageUid) {
@@ -96,6 +102,15 @@ public class PackageManager {
     private void saveReportToFile(String fileName, String report) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName, true))) {
             writer.write(report);
+            writer.newLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void saveReportToFile(String fileName, String report, String collegeId) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName, true))) {
+            writer.write("User ID: " + collegeId + " - " + report);
             writer.newLine();
         } catch (IOException e) {
             e.printStackTrace();
